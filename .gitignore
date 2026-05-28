@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.env
+*.local
+enfermagem/
+ponto-digital/
+portaria-inteligente/
+vendas26/
+vendas26.rar
+vendas25042026/
+cardapio-simples/
+*.tsbuildinfo
