@@ -1,4 +1,4 @@
-CREATE TABLE public.users (
+CREATE TABLE IF NOT EXISTS public.users (
   id TEXT PRIMARY KEY,
   nome TEXT NOT NULL,
   email TEXT NOT NULL UNIQUE,
@@ -7,38 +7,38 @@ CREATE TABLE public.users (
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
-CREATE TABLE public.equipamentos (
+CREATE TABLE IF NOT EXISTS public.equipamentos (
   id TEXT PRIMARY KEY,
   nome TEXT NOT NULL,
   descricao TEXT DEFAULT ''
 );
 
-CREATE TABLE public.setores (
+CREATE TABLE IF NOT EXISTS public.setores (
   id TEXT PRIMARY KEY,
   nome TEXT NOT NULL
 );
 
-CREATE TABLE public.tems (
+CREATE TABLE IF NOT EXISTS public.tems (
   id TEXT PRIMARY KEY,
   codigo TEXT NOT NULL,
   descricao TEXT DEFAULT '',
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
-CREATE TABLE public.revisoes (
+CREATE TABLE IF NOT EXISTS public.revisoes (
   id TEXT PRIMARY KEY,
   numero TEXT NOT NULL,
   descricao TEXT DEFAULT ''
 );
 
-CREATE TABLE public.atividades (
+CREATE TABLE IF NOT EXISTS public.atividades (
   id TEXT PRIMARY KEY,
   nome TEXT NOT NULL,
   descricao TEXT DEFAULT '',
   itens JSONB DEFAULT '[]'::jsonb
 );
 
-CREATE TABLE public.ordens (
+CREATE TABLE IF NOT EXISTS public.ordens (
   id TEXT PRIMARY KEY,
   equipamento_id TEXT REFERENCES public.equipamentos(id),
   setor_id TEXT REFERENCES public.setores(id),
@@ -68,10 +68,10 @@ CREATE TABLE public.ordens (
   numero TEXT DEFAULT ''
 );
 
-ALTER TABLE public.users DISABLE ROW LEVEL SECURITY;
-ALTER TABLE public.equipamentos DISABLE ROW LEVEL SECURITY;
-ALTER TABLE public.setores DISABLE ROW LEVEL SECURITY;
-ALTER TABLE public.tems DISABLE ROW LEVEL SECURITY;
-ALTER TABLE public.revisoes DISABLE ROW LEVEL SECURITY;
-ALTER TABLE public.atividades DISABLE ROW LEVEL SECURITY;
-ALTER TABLE public.ordens DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.users DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.equipamentos DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.setores DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.tems DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.revisoes DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.atividades DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.ordens DISABLE ROW LEVEL SECURITY;

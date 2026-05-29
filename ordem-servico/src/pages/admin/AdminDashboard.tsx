@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ListTodo, Wrench, Building2, Hash, FileClock, Image as ImageIcon, Upload, Trash2, CalendarCheck, Users } from "lucide-react";
+import { ListTodo, Wrench, Building2, Hash, FileClock, Image as ImageIcon, Upload, Trash2, CalendarCheck, Users, CloudUpload, Loader2, CheckCircle2 } from "lucide-react";
 
 const cards = [
   { to: "/admin/atividades", icon: ListTodo, title: "Atividades", desc: "Gerenciar modelos de atividade com itens" },
@@ -14,6 +14,8 @@ const cards = [
 
 export default function AdminDashboard() {
   const [wallpaperUrl, setWallpaperUrl] = useState<string | null>(null);
+  const [syncing, setSyncing] = useState(false);
+  const [syncOk, setSyncOk] = useState(false);
 
   useEffect(() => {
     setWallpaperUrl(localStorage.getItem("wallpaper"));
@@ -34,6 +36,20 @@ export default function AdminDashboard() {
   const handleRemove = () => {
     localStorage.setItem("wallpaper", "");
     setWallpaperUrl(null);
+  };
+
+  const handleSync = async () => {
+    setSyncing(true);
+    setSyncOk(false);
+    try {
+      const { syncAllToSupabase } = await import("@/lib/supabase");
+      await syncAllToSupabase();
+      setSyncOk(true);
+      setTimeout(() => setSyncOk(false), 4000);
+    } catch (e) {
+      console.error("Sync failed", e);
+    }
+    setSyncing(false);
   };
 
   const inp = "w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent";
@@ -87,6 +103,21 @@ export default function AdminDashboard() {
             <p className="text-sm text-slate-500">Nenhum wallpaper definido</p>
           )}
         </div>
+      </div>
+
+      <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-4 sm:p-5 mt-6">
+        <div className="flex items-center gap-2 mb-3">
+          <CloudUpload className="h-5 w-5 text-blue-600" />
+          <h2 className="font-semibold text-slate-800">Sincronizar com Servidor</h2>
+        </div>
+        <p className="text-sm text-slate-500 mb-4">
+          Envia todos os dados do navegador para o Supabase (nuvem). Use após cadastrar dados no localhost para que apareçam no Vercel.
+        </p>
+        <button onClick={handleSync} disabled={syncing}
+          className="bg-blue-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 min-h-[44px]">
+          {syncing ? <Loader2 className="h-4 w-4 animate-spin" /> : syncOk ? <CheckCircle2 className="h-4 w-4" /> : <CloudUpload className="h-4 w-4" />}
+          {syncing ? "Sincronizando..." : syncOk ? "Sincronizado!" : "Sincronizar agora"}
+        </button>
       </div>
     </div>
   );
