@@ -64,27 +64,27 @@ export default function AtividadesPage() {
     });
   };
 
-  const inp = "w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent";
+  const inp = "w-full border border-slate-300 rounded-lg px-3 py-2.5 sm:py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent min-h-[44px]";
 
   return (
     <div>
       <div className="flex items-center gap-3 mb-6">
-        <button onClick={() => navigate("/admin")} className="p-2 rounded-md text-slate-500 hover:bg-slate-200 transition-colors">
+        <button onClick={() => navigate("/admin")} className="p-2 rounded-md text-slate-500 hover:bg-slate-200 transition-colors min-w-[40px] min-h-[40px] flex items-center justify-center">
           <ArrowLeft className="h-5 w-5" />
         </button>
-        <h1 className="text-2xl font-bold text-slate-800">Atividades</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-slate-800">Atividades</h1>
       </div>
 
-      <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-5 mb-6">
+      <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-4 sm:p-5 mb-6">
         <h2 className="font-semibold text-slate-800 mb-4">{editingId ? "Editar" : "Nova"} Atividade</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div className="flex flex-col sm:flex-row gap-4 mb-4">
           <input type="text" value={form.nome} onChange={(e) => setForm({ ...form, nome: e.target.value })} className={inp} placeholder="Nome da atividade" />
           <input type="text" value={form.descricao} onChange={(e) => setForm({ ...form, descricao: e.target.value })} className={inp} placeholder="Descrição (opcional)" />
         </div>
 
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-medium text-slate-700">Itens</h3>
-          <button type="button" onClick={addItem} className="text-sm text-amber-600 hover:text-amber-800 flex items-center gap-1 font-medium">
+          <button type="button" onClick={addItem} className="text-sm text-amber-600 hover:text-amber-800 flex items-center gap-1 font-medium py-2">
             <Plus className="h-3.5 w-3.5" /> Adicionar item
           </button>
         </div>
@@ -93,22 +93,22 @@ export default function AtividadesPage() {
           {itens.map((item, idx) => (
             <div key={item.id || idx} className="flex items-center gap-1">
               <div className="flex flex-col gap-0.5 shrink-0">
-                <button onClick={() => moveItem(idx, -1)} disabled={idx === 0} className="p-0.5 rounded text-slate-400 hover:text-slate-600 disabled:opacity-20 disabled:cursor-not-allowed"><ArrowUp className="h-3 w-3" /></button>
-                <button onClick={() => moveItem(idx, 1)} disabled={idx === itens.length - 1} className="p-0.5 rounded text-slate-400 hover:text-slate-600 disabled:opacity-20 disabled:cursor-not-allowed"><ArrowDown className="h-3 w-3" /></button>
+                <button onClick={() => moveItem(idx, -1)} disabled={idx === 0} className="p-1 rounded text-slate-400 hover:text-slate-600 disabled:opacity-20 disabled:cursor-not-allowed"><ArrowUp className="h-3 w-3" /></button>
+                <button onClick={() => moveItem(idx, 1)} disabled={idx === itens.length - 1} className="p-1 rounded text-slate-400 hover:text-slate-600 disabled:opacity-20 disabled:cursor-not-allowed"><ArrowDown className="h-3 w-3" /></button>
               </div>
               <input type="text" value={item.nome} onChange={(e) => updItem(idx, { nome: e.target.value })} className={inp} placeholder="Nome do item" />
-              <button onClick={() => delItem(idx)} className="p-1.5 rounded-md text-slate-400 hover:text-red-600 shrink-0"><X className="h-4 w-4" /></button>
+              <button onClick={() => delItem(idx)} className="p-2 rounded-md text-slate-400 hover:text-red-600 shrink-0 min-w-[36px] min-h-[36px] flex items-center justify-center"><X className="h-4 w-4" /></button>
             </div>
           ))}
           {itens.length === 0 && <p className="text-sm text-slate-400 text-center py-2">Nenhum item cadastrado</p>}
         </div>
 
         <div className="flex gap-2">
-          <button onClick={save} className="bg-amber-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-amber-700 transition-colors flex items-center gap-1.5">
+          <button onClick={save} className="bg-amber-600 text-white px-4 py-2.5 sm:py-2 rounded-lg text-sm font-medium hover:bg-amber-700 transition-colors flex items-center gap-1.5 min-h-[44px]">
             <Save className="h-4 w-4" /> Salvar
           </button>
           {editingId && (
-            <button onClick={reset} className="bg-slate-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-300 transition-colors">
+            <button onClick={reset} className="bg-slate-200 text-slate-700 px-4 py-2.5 sm:py-2 rounded-lg text-sm font-medium hover:bg-slate-300 transition-colors min-h-[44px]">
               Cancelar
             </button>
           )}
@@ -117,8 +117,8 @@ export default function AtividadesPage() {
 
       <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
         {list.map((a) => (
-          <div key={a.id} className="p-4 border-b border-slate-100 last:border-0 flex items-start justify-between gap-4">
-            <div>
+          <div key={a.id} className="p-3 sm:p-4 border-b border-slate-100 last:border-0 flex items-start justify-between gap-3">
+            <div className="min-w-0 flex-1">
               <h3 className="font-medium text-slate-800">{a.nome}</h3>
               {a.descricao && <p className="text-sm text-slate-500">{a.descricao}</p>}
               <div className="flex flex-wrap gap-1.5 mt-2">
@@ -130,8 +130,8 @@ export default function AtividadesPage() {
               </div>
             </div>
             <div className="flex items-center gap-1 shrink-0">
-              <button onClick={() => edit(a)} className="p-1.5 rounded-md text-slate-400 hover:text-blue-600"><Pencil className="h-4 w-4" /></button>
-              <button onClick={() => remove(a.id)} className="p-1.5 rounded-md text-slate-400 hover:text-red-600"><Trash2 className="h-4 w-4" /></button>
+              <button onClick={() => edit(a)} className="p-2 rounded-md text-slate-400 hover:text-blue-600 min-w-[36px] min-h-[36px] flex items-center justify-center"><Pencil className="h-4 w-4" /></button>
+              <button onClick={() => remove(a.id)} className="p-2 rounded-md text-slate-400 hover:text-red-600 min-w-[36px] min-h-[36px] flex items-center justify-center"><Trash2 className="h-4 w-4" /></button>
             </div>
           </div>
         ))}

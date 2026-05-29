@@ -23,10 +23,10 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl shadow-lg border border-slate-200 w-full max-w-sm p-8">
-        <div className="flex flex-col items-center mb-8">
-          <img src="/logo.png" alt="Logo" className="h-16 mb-3 object-contain" />
-          <h1 className="text-xl font-bold text-slate-800">Ordem de Serviço</h1>
+      <div className="bg-white rounded-xl shadow-lg border border-slate-200 w-full max-w-sm p-6 sm:p-8 mx-auto">
+        <div className="flex flex-col items-center mb-6 sm:mb-8">
+          <img src="/logo.png" alt="Logo" className="h-14 sm:h-16 mb-3 object-contain" />
+          <h1 className="text-lg sm:text-xl font-bold text-slate-800">Ordem de Serviço</h1>
           <p className="text-sm text-slate-500 mt-1">Faça login para continuar</p>
         </div>
 
@@ -37,7 +37,7 @@ export default function Login() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full border border-slate-300 rounded-lg px-3 py-3 sm:py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-[44px]"
               placeholder="seu@email.com"
               required
             />
@@ -48,21 +48,21 @@ export default function Login() {
               type="password"
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full border border-slate-300 rounded-lg px-3 py-3 sm:py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-[44px]"
               placeholder="********"
               required
             />
           </div>
 
           {erro && (
-            <div className="bg-red-50 border border-red-200 rounded-lg px-3 py-2 text-sm text-red-700">
+            <div className="bg-red-50 border border-red-200 rounded-lg px-3 py-2.5 text-sm text-red-700">
               {erro}
             </div>
           )}
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+            className="w-full bg-blue-600 text-white py-3 sm:py-2.5 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 min-h-[48px] sm:min-h-[44px]"
           >
             <LogIn className="h-4 w-4" />
             Entrar

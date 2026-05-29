@@ -40,13 +40,13 @@ export default function AdminDashboard() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-slate-800 mb-6">Administração</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+      <h1 className="text-xl sm:text-2xl font-bold text-slate-800 mb-6">Administração</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-8">
         {cards.map((c) => (
           <Link
             key={c.to}
             to={c.to}
-            className="bg-white rounded-lg border border-slate-200 shadow-sm p-5 hover:shadow-md hover:border-amber-300 transition-all group"
+            className="bg-white rounded-lg border border-slate-200 shadow-sm p-4 sm:p-5 hover:shadow-md hover:border-amber-300 transition-all group"
           >
             <div className="h-10 w-10 bg-amber-100 rounded-lg flex items-center justify-center mb-3 group-hover:bg-amber-200 transition-colors">
               <c.icon className="h-5 w-5 text-amber-700" />
@@ -57,7 +57,7 @@ export default function AdminDashboard() {
         ))}
       </div>
 
-      <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-5">
+      <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-4 sm:p-5">
         <div className="flex items-center gap-2 mb-4">
           <ImageIcon className="h-5 w-5 text-amber-600" />
           <h2 className="font-semibold text-slate-800">Papel de Parede</h2>
@@ -66,20 +66,20 @@ export default function AdminDashboard() {
         {wallpaperUrl && (
           <div className="mb-4">
             <p className="text-xs text-slate-500 mb-2">Wallpaper atual:</p>
-            <div className="w-full h-32 rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-center overflow-hidden">
+            <div className="w-full h-24 sm:h-32 rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-center overflow-hidden">
               <img src={wallpaperUrl} alt="Wallpaper" className="max-h-full max-w-full object-contain" />
             </div>
           </div>
         )}
 
         <div className="flex flex-wrap items-center gap-3">
-          <label className="cursor-pointer bg-amber-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-amber-700 transition-colors flex items-center gap-1.5">
+          <label className="cursor-pointer bg-amber-600 text-white px-4 py-2.5 sm:py-2 rounded-lg text-sm font-medium hover:bg-amber-700 transition-colors flex items-center gap-1.5 min-h-[44px]">
             <Upload className="h-4 w-4" />
             {wallpaperUrl ? "Trocar imagem" : "Enviar imagem"}
             <input type="file" accept="image/*" onChange={handleUpload} className="hidden" />
           </label>
           {wallpaperUrl && (
-            <button onClick={handleRemove} className="bg-slate-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-200 hover:text-red-700 transition-colors flex items-center gap-1.5">
+            <button onClick={handleRemove} className="bg-slate-200 text-slate-700 px-4 py-2.5 sm:py-2 rounded-lg text-sm font-medium hover:bg-red-200 hover:text-red-700 transition-colors flex items-center gap-1.5 min-h-[44px]">
               <Trash2 className="h-4 w-4" /> Remover
             </button>
           )}

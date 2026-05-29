@@ -45,17 +45,17 @@ export default function Reports() {
   };
 
   const inputClass =
-    "w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent";
+    "w-full border border-slate-300 rounded-lg px-3 py-2.5 sm:py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-[44px]";
   const labelClass = "block text-sm font-medium text-slate-700 mb-1";
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2">
-        <FileText className="h-6 w-6 text-blue-600" />
+      <h1 className="text-xl sm:text-2xl font-bold text-slate-800 mb-4 sm:mb-6 flex items-center gap-2">
+        <FileText className="h-5 w-6 sm:h-6 sm:w-6 text-blue-600" />
         Relatórios
       </h1>
 
-      <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-6 mb-6">
+      <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-4 sm:p-6 mb-6">
         <h2 className="font-semibold text-slate-800 mb-4">Filtrar</h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           <div>
@@ -81,7 +81,7 @@ export default function Reports() {
           <button
             onClick={handleGerarPdf}
             disabled={gerando}
-            className="bg-blue-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            className="bg-blue-600 text-white px-5 py-3 sm:py-2.5 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 min-h-[48px] sm:min-h-[44px]"
           >
             {gerando ? <Loader2 className="h-4 w-4 animate-spin" /> : <Printer className="h-4 w-4" />}
             {gerando ? "Gerando..." : "Gerar Relatório PDF"}
@@ -99,31 +99,31 @@ export default function Reports() {
           <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
             <span className="text-sm font-medium text-slate-700">{filtradas.length} OS encontrada(s)</span>
           </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+          <div className="overflow-x-auto -mx-3 sm:mx-0">
+            <table className="w-full text-sm min-w-[500px]">
               <thead className="bg-slate-50 text-slate-600 text-xs uppercase">
                 <tr>
-                  <th className="text-left px-4 py-2 font-medium">Nº</th>
-                  <th className="text-left px-4 py-2 font-medium">Data</th>
-                  <th className="text-left px-4 py-2 font-medium">Equipamento</th>
-                  <th className="text-left px-4 py-2 font-medium">Setor</th>
-                  <th className="text-left px-4 py-2 font-medium">Tipo</th>
-                  <th className="text-left px-4 py-2 font-medium">Status</th>
+                  <th className="text-left px-3 sm:px-4 py-2 font-medium">Nº</th>
+                  <th className="text-left px-3 sm:px-4 py-2 font-medium">Data</th>
+                  <th className="text-left px-3 sm:px-4 py-2 font-medium">Equipamento</th>
+                  <th className="text-left px-3 sm:px-4 py-2 font-medium">Setor</th>
+                  <th className="text-left px-3 sm:px-4 py-2 font-medium">Tipo</th>
+                  <th className="text-left px-3 sm:px-4 py-2 font-medium">Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {filtradas.map((os) => (
                   <tr key={os.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-2 text-slate-500 whitespace-nowrap text-xs">{os.numero || "-"}</td>
-                    <td className="px-4 py-2 text-slate-700 whitespace-nowrap">{formatDate(os.data)}</td>
-                    <td className="px-4 py-2 text-slate-700">{resolve("equipamentos", os.equipamentoId)}</td>
-                    <td className="px-4 py-2 text-slate-700">{resolve("setores", os.setorId)}</td>
-                    <td className="px-4 py-2">
+                    <td className="px-3 sm:px-4 py-2 text-slate-500 whitespace-nowrap text-xs">{os.numero || "-"}</td>
+                    <td className="px-3 sm:px-4 py-2 text-slate-700 whitespace-nowrap">{formatDate(os.data)}</td>
+                    <td className="px-3 sm:px-4 py-2 text-slate-700 whitespace-nowrap">{resolve("equipamentos", os.equipamentoId)}</td>
+                    <td className="px-3 sm:px-4 py-2 text-slate-700 whitespace-nowrap">{resolve("setores", os.setorId)}</td>
+                    <td className="px-3 sm:px-4 py-2">
                       <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold uppercase ${os.tipo === "preventiva" ? "bg-blue-100 text-blue-700" : "bg-orange-100 text-orange-700"}`}>
                         {os.tipo === "preventiva" ? "Preventiva" : "OS"}
                       </span>
                     </td>
-                    <td className="px-4 py-2">
+                    <td className="px-3 sm:px-4 py-2">
                       <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full ${
                         os.concluido === true ? "bg-green-100 text-green-700" :
                         os.concluido === false ? "bg-red-100 text-red-700" :
