@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ListTodo, Wrench, Building2, Hash, FileClock, Image as ImageIcon, Upload, Trash2, CalendarCheck, Users, CloudUpload, Loader2, CheckCircle2 } from "lucide-react";
+import { ListTodo, Wrench, Building2, Hash, FileClock, Image as ImageIcon, Upload, Trash2, CalendarCheck, Users, CloudUpload, Loader2, CheckCircle2, AlertCircle, Database } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const cards = [
   { to: "/admin/atividades", icon: ListTodo, title: "Atividades", desc: "Gerenciar modelos de atividade com itens" },
@@ -13,9 +14,11 @@ const cards = [
 ];
 
 export default function AdminDashboard() {
+  const { isSuperAdmin } = useAuth();
   const [wallpaperUrl, setWallpaperUrl] = useState<string | null>(null);
   const [syncing, setSyncing] = useState(false);
   const [syncOk, setSyncOk] = useState(false);
+  const [syncErrors, setSyncErrors] = useState<string[]>([]);
 
   useEffect(() => {
     setWallpaperUrl(localStorage.getItem("wallpaper"));
@@ -41,13 +44,18 @@ export default function AdminDashboard() {
   const handleSync = async () => {
     setSyncing(true);
     setSyncOk(false);
+    setSyncErrors([]);
     try {
       const { syncAllToSupabase } = await import("@/lib/supabase");
-      await syncAllToSupabase();
-      setSyncOk(true);
-      setTimeout(() => setSyncOk(false), 4000);
+      const errs = await syncAllToSupabase();
+      if (errs.length === 0) {
+        setSyncOk(true);
+        setTimeout(() => setSyncOk(false), 4000);
+      } else {
+        setSyncErrors(errs);
+      }
     } catch (e) {
-      console.error("Sync failed", e);
+      setSyncErrors([(e as Error).message]);
     }
     setSyncing(false);
   };
@@ -105,6 +113,8 @@ export default function AdminDashboard() {
         </div>
       </div>
 
+      {isSuperAdmin && (
+      <>
       <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-4 sm:p-5 mt-6">
         <div className="flex items-center gap-2 mb-3">
           <CloudUpload className="h-5 w-5 text-blue-600" />
@@ -118,7 +128,39 @@ export default function AdminDashboard() {
           {syncing ? <Loader2 className="h-4 w-4 animate-spin" /> : syncOk ? <CheckCircle2 className="h-4 w-4" /> : <CloudUpload className="h-4 w-4" />}
           {syncing ? "Sincronizando..." : syncOk ? "Sincronizado!" : "Sincronizar agora"}
         </button>
+        {syncErrors.length > 0 && (
+          <div className="mt-4 bg-red-50 border border-red-200 rounded-lg p-3">
+            <div className="flex items-center gap-2 text-red-700 font-medium text-sm mb-2">
+              <AlertCircle className="h-4 w-4" />
+              Erros ao sincronizar:
+            </div>
+            <ul className="text-xs text-red-600 space-y-1 ml-6 list-disc">
+              {syncErrors.map((e, i) => <li key={i}>{e}</li>)}
+            </ul>
+          </div>
+        )}
       </div>
+
+      <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-4 sm:p-5 mt-6">
+        <div className="flex items-center gap-2 mb-3">
+          <Database className="h-5 w-5 text-green-600" />
+          <h2 className="font-semibold text-slate-800">Backup SQL</h2>
+        </div>
+        <p className="text-sm text-slate-500 mb-4">
+          Gera comandos INSERT SQL dos equipamentos para colar no Supabase SQL Editor.
+        </p>
+        <button onClick={async () => {
+          const { gerarInsertSQL } = await import("@/lib/supabase");
+          const sql = gerarInsertSQL("equipamentos");
+          try { await navigator.clipboard.writeText(sql); alert("SQL copiado! Cole no Supabase SQL Editor."); }
+          catch { prompt("Copie o SQL abaixo:", sql); }
+        }}
+          className="bg-green-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors flex items-center gap-2 min-h-[44px]">
+          <Database className="h-4 w-4" />
+          Gerar SQL dos Equipamentos
+        </button>
+      </div>
+      </>)}
     </div>
   );
 }

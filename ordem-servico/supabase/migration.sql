@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS public.users (
   nome TEXT NOT NULL,
   email TEXT NOT NULL UNIQUE,
   senha TEXT NOT NULL,
-  role TEXT NOT NULL DEFAULT 'user' CHECK (role IN ('admin', 'user')),
+  role TEXT NOT NULL DEFAULT 'user' CHECK (role IN ('super_admin', 'admin', 'user')),
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
@@ -40,8 +40,8 @@ CREATE TABLE IF NOT EXISTS public.atividades (
 
 CREATE TABLE IF NOT EXISTS public.ordens (
   id TEXT PRIMARY KEY,
-  equipamento_id TEXT REFERENCES public.equipamentos(id),
-  setor_id TEXT REFERENCES public.setores(id),
+  equipamento_id TEXT,
+  setor_id TEXT,
   data TEXT NOT NULL,
   atividade_descricao TEXT DEFAULT '',
   atividades JSONB DEFAULT '[]'::jsonb,
@@ -56,11 +56,11 @@ CREATE TABLE IF NOT EXISTS public.ordens (
   observacao TEXT DEFAULT '',
   assinatura_responsavel TEXT DEFAULT '',
   assinatura TEXT DEFAULT '',
-  tem_id TEXT REFERENCES public.tems(id),
-  revisao_id TEXT REFERENCES public.revisoes(id),
-  criador_id TEXT REFERENCES public.users(id),
+  tem_id TEXT,
+  revisao_id TEXT,
+  criador_id TEXT,
   aprovador TEXT DEFAULT 'Leandro',
-  user_id TEXT REFERENCES public.users(id),
+  user_id TEXT,
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now(),
   concluido BOOLEAN DEFAULT NULL,

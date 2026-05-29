@@ -7,9 +7,11 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const TABLES = ["users", "equipamentos", "setores", "tems", "revisoes", "atividades", "ordens"];
 
-export async function syncAllToSupabase() {
+export async function syncAllToSupabase(): Promise<string[]> {
+  const errors: string[] = [];
   for (const table of TABLES) {
-    const local = JSON.parse(localStorage.getItem(`os:${table}`) || "[]");
+    const raw = localStorage.getItem(`os:${table}`);
+    const local = JSON.parse(raw || "[]");
     if (local.length === 0) continue;
     for (const item of local) {
       const record: any = {};
@@ -21,8 +23,55 @@ export async function syncAllToSupabase() {
           record[col] = value;
         }
       }
-      const { error } = await supabase.from(table).upsert(record, { onConflict: "id" });
-      if (error) console.error(`Erro sync ${table} ${item.id}:`, error);
+      try {
+        const { data: existing } = await supabase.from(table).select("id").eq("id", record.id).maybeSingle();
+        let error: any;
+        if (!existing) {
+          ({ error } = await supabase.from(table).insert(record));
+        } else {
+          ({ error } = await supabase.from(table).update(record).eq("id", record.id));
+        }
+        if (error) {
+          const msg = `Erro [${table} id=${item.id}]: ${error.message}`;
+          console.error(msg, error);
+          errors.push(msg);
+        } else {
+          console.log(`OK [${table}] id=${item.id}`);
+        }
+      } catch (e) {
+        const msg = `Exceção [${table} id=${item.id}]: ${(e as Error).message}`;
+        console.error(msg, e);
+        errors.push(msg);
+      }
     }
   }
+  return errors;
+}
+
+export function gerarInsertSQL(entity: string): string {
+  const raw = localStorage.getItem(`os:${entity}`);
+  if (!raw) return `-- Nenhum dado encontrado para ${entity}`;
+  let data: any[];
+  try { data = JSON.parse(raw); } catch { return `-- Erro ao parsear ${entity}`; }
+  let sql = `-- BACKUP ${entity.toUpperCase()} - ${new Date().toISOString()}\n`;
+  for (const item of data) {
+    const cols: string[] = [];
+    const vals: string[] = [];
+    for (const [key, value] of Object.entries(item)) {
+      const col = key.replace(/([A-Z])/g, "_$1").toLowerCase();
+      cols.push(col);
+      if (value === null || value === undefined) {
+        vals.push("NULL");
+      } else if (typeof value === "string") {
+        vals.push(`'${(value as string).replace(/'/g, "''")}'`);
+      } else if (Array.isArray(value)) {
+        vals.push(`'${JSON.stringify(value).replace(/'/g, "''")}'`);
+      } else {
+        vals.push(String(value));
+      }
+    }
+    sql += `INSERT INTO public.${entity} (${cols.join(", ")}) VALUES (${vals.join(", ")});\n`;
+  }
+  sql += `\n-- Total: ${data.length} registros\n`;
+  return sql;
 }

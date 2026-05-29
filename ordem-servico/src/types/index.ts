@@ -4,6 +4,7 @@ export interface User {
   email: string;
   senha: string;
   role: "admin" | "user";
+  level?: "super_admin" | "admin" | "user";
   createdAt: string;
 }
 

@@ -3,9 +3,11 @@ import { ArrowLeft, Pencil, Trash2, Save, X, Shield, User as UserIcon } from "lu
 import { useNavigate } from "react-router-dom";
 import { User } from "@/types";
 import { db } from "@/lib/db";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function UsuariosPage() {
   const navigate = useNavigate();
+  const { isSuperAdmin } = useAuth();
   const [list, setList] = useState<User[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState({ nome: "", email: "", senha: "", role: "user" as "admin" | "user" });
@@ -56,28 +58,30 @@ export default function UsuariosPage() {
         <h1 className="text-xl sm:text-2xl font-bold text-slate-800">Usuários</h1>
       </div>
 
-      <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-4 sm:p-5 mb-6">
-        <h2 className="font-semibold text-slate-800 mb-4">{editingId ? "Editar" : "Novo"} Usuário</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-          <input type="text" value={form.nome} onChange={(e) => setForm({ ...form, nome: e.target.value })} className={inp} placeholder="Nome" />
-          <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={inp} placeholder="E-mail" />
-          <input type="password" value={form.senha} onChange={(e) => setForm({ ...form, senha: e.target.value })} className={inp} placeholder={editingId ? "Nova senha (opcional)" : "Senha"} />
-          <select value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value as "admin" | "user" })} className={inp}>
-            <option value="user">Usuário</option>
-            <option value="admin">Admin</option>
-          </select>
-        </div>
-        <div className="flex gap-2">
-          <button onClick={save} className="bg-amber-600 text-white px-4 py-2.5 sm:py-2 rounded-lg text-sm font-medium hover:bg-amber-700 transition-colors flex items-center gap-1.5 min-h-[44px]">
-            <Save className="h-4 w-4" /> Salvar
-          </button>
-          {editingId && (
-            <button onClick={reset} className="bg-slate-200 text-slate-700 px-4 py-2.5 sm:py-2 rounded-lg text-sm font-medium hover:bg-slate-300 transition-colors min-h-[44px]">
-              Cancelar
+      {isSuperAdmin && (
+        <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-4 sm:p-5 mb-6">
+          <h2 className="font-semibold text-slate-800 mb-4">{editingId ? "Editar" : "Novo"} Usuário</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+            <input type="text" value={form.nome} onChange={(e) => setForm({ ...form, nome: e.target.value })} className={inp} placeholder="Nome" />
+            <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={inp} placeholder="E-mail" />
+            <input type="password" value={form.senha} onChange={(e) => setForm({ ...form, senha: e.target.value })} className={inp} placeholder={editingId ? "Nova senha (opcional)" : "Senha"} />
+            <select value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value as "admin" | "user" })} className={inp}>
+              <option value="user">Usuário</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <div className="flex gap-2">
+            <button onClick={save} className="bg-amber-600 text-white px-4 py-2.5 sm:py-2 rounded-lg text-sm font-medium hover:bg-amber-700 transition-colors flex items-center gap-1.5 min-h-[44px]">
+              <Save className="h-4 w-4" /> Salvar
             </button>
-          )}
+            {editingId && (
+              <button onClick={reset} className="bg-slate-200 text-slate-700 px-4 py-2.5 sm:py-2 rounded-lg text-sm font-medium hover:bg-slate-300 transition-colors min-h-[44px]">
+                Cancelar
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto -mx-3 sm:mx-0">
@@ -102,8 +106,14 @@ export default function UsuariosPage() {
                     </span>
                   </td>
                   <td className="px-3 sm:px-4 py-3 text-right whitespace-nowrap">
-                    <button onClick={() => edit(u)} className="p-2 rounded-md text-slate-400 hover:text-blue-600 min-w-[36px] min-h-[36px] inline-flex items-center justify-center"><Pencil className="h-4 w-4" /></button>
-                    <button onClick={() => remove(u.id)} className="p-2 rounded-md text-slate-400 hover:text-red-600 min-w-[36px] min-h-[36px] inline-flex items-center justify-center"><Trash2 className="h-4 w-4" /></button>
+                    {isSuperAdmin ? (
+                      <>
+                        <button onClick={() => edit(u)} className="p-2 rounded-md text-slate-400 hover:text-blue-600 min-w-[36px] min-h-[36px] inline-flex items-center justify-center"><Pencil className="h-4 w-4" /></button>
+                        <button onClick={() => remove(u.id)} className="p-2 rounded-md text-slate-400 hover:text-red-600 min-w-[36px] min-h-[36px] inline-flex items-center justify-center"><Trash2 className="h-4 w-4" /></button>
+                      </>
+                    ) : (
+                      <span className="text-xs text-slate-400">Apenas visualização</span>
+                    )}
                   </td>
                 </tr>
               ))}

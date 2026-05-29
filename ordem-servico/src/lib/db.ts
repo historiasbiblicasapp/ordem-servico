@@ -128,12 +128,15 @@ export function genId(): string {
   return Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
 }
 
-function seedUser(nome: string, email: string, senha: string, role: string) {
+function seedUser(nome: string, email: string, senha: string, role: string, level?: string) {
   const existing = db.list<any>("users").find((u) => u.email === email);
+  const payload: any = { nome, senha: btoa(senha), role };
+  if (level) payload.level = level;
   if (existing) {
-    db.update<any>("users", existing.id, { nome, senha: btoa(senha), role } as any);
+    db.update<any>("users", existing.id, payload);
   } else {
-    db.create("users", { nome, email, senha: btoa(senha), role, createdAt: new Date().toISOString() } as any);
+    payload.createdAt = new Date().toISOString();
+    db.create("users", payload);
   }
 }
 
@@ -141,7 +144,8 @@ export function seedInitialData() {
   const users = db.list("users");
   const isFirstRun = users.length === 0;
 
-  seedUser("Administrador", "admin@admin.com", "admin123", "admin");
+  seedUser("Administrador", "admin@admin.com", "admin123", "admin", "super_admin");
+  seedUser("Ayrton", "ayrton@raitz.com", "ayrton123", "admin", "admin");
   seedUser("Leandro", "leandro@raitz.com", "leandro123", "user");
   seedUser("Carlos", "carlos@raitz.com", "carlos123", "user");
   seedUser("Marcos", "marcos@raitz.com", "marcos123", "user");
