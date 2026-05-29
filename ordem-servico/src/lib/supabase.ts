@@ -12,15 +12,14 @@ export async function syncAllToSupabase() {
     const local = JSON.parse(localStorage.getItem(`os:${table}`) || "[]");
     if (local.length === 0) continue;
     for (const item of local) {
-      const record = { ...item };
-      // converte createdAt → created_at para o banco
-      if (record.createdAt && !record.created_at) {
-        record.created_at = record.createdAt;
-        delete record.createdAt;
-      }
-      if (record.updatedAt && !record.updated_at) {
-        record.updated_at = record.updatedAt;
-        delete record.updatedAt;
+      const record: any = {};
+      for (const [key, value] of Object.entries(item)) {
+        const col = key.replace(/([A-Z])/g, "_$1").toLowerCase();
+        if (Array.isArray(value)) {
+          record[col] = JSON.stringify(value);
+        } else {
+          record[col] = value;
+        }
       }
       const { error } = await supabase.from(table).upsert(record, { onConflict: "id" });
       if (error) console.error(`Erro sync ${table} ${item.id}:`, error);
