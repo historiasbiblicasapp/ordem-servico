@@ -1,0 +1,6 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "cd ordem-servico && npm ci && npm run build"
+  }
+}
