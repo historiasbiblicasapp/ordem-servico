@@ -83,3 +83,10 @@ ALTER TABLE public.tems DISABLE ROW LEVEL SECURITY;
 ALTER TABLE public.revisoes DISABLE ROW LEVEL SECURITY;
 ALTER TABLE public.atividades DISABLE ROW LEVEL SECURITY;
 ALTER TABLE public.ordens DISABLE ROW LEVEL SECURITY;
+
+-- Seed de usuários
+INSERT INTO public.users (nome, email, senha, role) VALUES
+  ('Administrador', 'admin@admin.com', encode(sha256('admin123'::bytea), 'hex'), 'admin'),
+  ('Leandro', 'leandro@raitz.com', encode(sha256('leandro123'::bytea), 'hex'), 'user'),
+  ('Carlos', 'carlos@raitz.com', encode(sha256('carlos123'::bytea), 'hex'), 'user'),
+  ('Marcos', 'marcos@raitz.com', encode(sha256('marcos123'::bytea), 'hex'), 'user');
