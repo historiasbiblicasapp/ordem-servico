@@ -128,17 +128,28 @@ export function genId(): string {
   return Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
 }
 
+function seedUser(nome: string, email: string, senha: string, role: string) {
+  const existing = db.list<any>("users").find((u) => u.email === email);
+  if (existing) {
+    db.update<any>("users", existing.id, { nome, senha: btoa(senha), role } as any);
+  } else {
+    db.create("users", { nome, email, senha: btoa(senha), role, createdAt: new Date().toISOString() } as any);
+  }
+}
+
 export function seedInitialData() {
   const users = db.list("users");
-  if (users.length > 0) return;
+  const isFirstRun = users.length === 0;
+
+  seedUser("Administrador", "admin@admin.com", "admin123", "admin");
+  seedUser("Leandro", "leandro@raitz.com", "leandro123", "user");
+  seedUser("Carlos", "carlos@raitz.com", "carlos123", "user");
+  seedUser("Marcos", "marcos@raitz.com", "marcos123", "user");
+  seedUser("Diego", "diego@raitz.com", "diego123", "user");
+
+  if (!isFirstRun) return;
 
   const now = new Date().toISOString();
-  db.create("users", { nome: "Administrador", email: "admin@admin.com", senha: btoa("admin123"), role: "admin", createdAt: now } as any);
-  db.create("users", { nome: "Leandro", email: "leandro@raitz.com", senha: btoa("leandro123"), role: "user", createdAt: now } as any);
-  db.create("users", { nome: "Carlos", email: "carlos@raitz.com", senha: btoa("carlos123"), role: "user", createdAt: now } as any);
-  db.create("users", { nome: "Marcos", email: "marcos@raitz.com", senha: btoa("marcos123"), role: "user", createdAt: now } as any);
-  db.create("users", { nome: "Diego", email: "diego@raitz.com", senha: btoa("diego123"), role: "user", createdAt: now } as any);
-  db.create("tems", { codigo: "TEM 121", descricao: "Padrão", createdAt: now } as any);
   db.create("revisoes", { numero: "3", descricao: "Revisão atual" } as any);
   db.create("equipamentos", { nome: "PONTE ROLANTE", descricao: "Ponte rolante" } as any);
   db.create("equipamentos", { nome: "PONTE ROLANTE T01", descricao: "Ponte rolante T01" } as any);
