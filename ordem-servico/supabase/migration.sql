@@ -89,4 +89,5 @@ INSERT INTO public.users (nome, email, senha, role) VALUES
   ('Administrador', 'admin@admin.com', encode(sha256('admin123'::bytea), 'hex'), 'admin'),
   ('Leandro', 'leandro@raitz.com', encode(sha256('leandro123'::bytea), 'hex'), 'user'),
   ('Carlos', 'carlos@raitz.com', encode(sha256('carlos123'::bytea), 'hex'), 'user'),
-  ('Marcos', 'marcos@raitz.com', encode(sha256('marcos123'::bytea), 'hex'), 'user');
+  ('Marcos', 'marcos@raitz.com', encode(sha256('marcos123'::bytea), 'hex'), 'user'),
+  ('Diego', 'diego@raitz.com', encode(sha256('diego123'::bytea), 'hex'), 'user');

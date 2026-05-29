@@ -137,6 +137,7 @@ export function seedInitialData() {
   db.create("users", { nome: "Leandro", email: "leandro@raitz.com", senha: btoa("leandro123"), role: "user", createdAt: now } as any);
   db.create("users", { nome: "Carlos", email: "carlos@raitz.com", senha: btoa("carlos123"), role: "user", createdAt: now } as any);
   db.create("users", { nome: "Marcos", email: "marcos@raitz.com", senha: btoa("marcos123"), role: "user", createdAt: now } as any);
+  db.create("users", { nome: "Diego", email: "diego@raitz.com", senha: btoa("diego123"), role: "user", createdAt: now } as any);
   db.create("tems", { codigo: "TEM 121", descricao: "Padrão", createdAt: now } as any);
   db.create("revisoes", { numero: "3", descricao: "Revisão atual" } as any);
   db.create("equipamentos", { nome: "PONTE ROLANTE", descricao: "Ponte rolante" } as any);
