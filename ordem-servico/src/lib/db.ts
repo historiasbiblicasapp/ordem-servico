@@ -130,7 +130,7 @@ export function genId(): string {
 
 function seedUser(nome: string, email: string, senha: string, role: string, level?: string) {
   const existing = db.list<any>("users").find((u) => u.email === email);
-  const payload: any = { nome, senha: btoa(senha), role };
+  const payload: any = { nome, email, senha: btoa(senha), role };
   if (level) payload.level = level;
   if (existing) {
     db.update<any>("users", existing.id, payload);
