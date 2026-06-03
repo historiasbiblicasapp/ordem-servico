@@ -23,6 +23,8 @@ export function setBlankCounter(val: number) {
   localStorage.setItem(COUNTER_KEY, String(val));
 }
 
+const cellBold = "border border-black px-2 py-1 text-[10px] font-bold bg-gray-100 text-center";
+
 export default function BlankOS() {
   const [numero, setNumero] = useState(getNextNumber);
 
@@ -32,11 +34,9 @@ export default function BlankOS() {
     window.print();
   };
 
-  const line = "border-b border-black w-full";
-  const cell = "border border-black px-2 py-1 text-[10px] leading-tight";
-  const cellBold = "border border-black px-2 py-1 text-[10px] font-bold bg-gray-100 leading-tight";
-
   const label = "font-bold text-[11px]";
+  const fieldLine = "border-b border-black w-full mt-1 min-h-[22px]";
+  const section = "border border-black p-2";
 
   return (
     <div>
@@ -48,166 +48,131 @@ export default function BlankOS() {
       </div>
 
       <style>{`
-        @page { size: A4; margin: 12mm 10mm; }
+        @page { size: A4; margin: 8mm 10mm; }
         @media print {
           body * { visibility: hidden; }
           #blank-os-print, #blank-os-print * { visibility: visible; }
-          #blank-os-print { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0; border: none; box-shadow: none; }
+          #blank-os-print { position: absolute; left: 10mm; top: 8mm; width: 190mm; height: 279mm; margin: 0; padding: 0; border: none; box-shadow: none; }
           .no-print { display: none !important; }
+          .print-grow { flex: 1; }
         }
+        #blank-os-print { display: flex; flex-direction: column; }
       `}</style>
 
-      <div id="blank-os-print" className="bg-white" style={{ width: "190mm", margin: "0 auto" }}>
-        <table className="w-full border-collapse">
-          {/* Cabeçalho */}
-          <tr>
-            <td colSpan={7} className="border border-black p-1">
-              <table className="w-full">
-                <tr>
-                  <td className="w-24 p-1 align-middle">
-                    <img src="/logo.png" alt="Raitz" className="h-10 object-contain" />
-                  </td>
-                  <td className="text-base font-bold text-center align-middle">ORDEM DE SERVIÇO</td>
-                  <td className="w-24 p-1 text-right align-middle">
-                    <span className="text-base font-bold">Nº {numero}</span>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
+      <div id="blank-os-print" className="bg-white border border-black" style={{ width: "190mm" }}>
 
-          {/* Motivo */}
-          <tr>
-            <td colSpan={7} className="border border-black p-1">
-              <span className={label}>Motivo:</span>
-              <div className={line} />
-            </td>
-          </tr>
+        {/* Cabeçalho: Logo + Título + Nº */}
+        <div className="flex items-center border-b border-black">
+          <div className="w-24 p-1"><img src="/logo.png" alt="Raitz" className="h-10 object-contain" /></div>
+          <div className="flex-1 text-center text-base font-bold">ORDEM DE SERVIÇO</div>
+          <div className="w-24 p-1 text-right text-base font-bold">Nº {numero}</div>
+        </div>
 
-          {/* Tipo de serviço */}
-          <tr>
-            <td colSpan={7} className="border border-black p-1">
-              <span className={label}>Tipo de serviço:</span>
-              <span className="ml-2 text-[11px]"><input type="checkbox" /> Corretiva</span>
-              <span className="ml-2 text-[11px]"><input type="checkbox" /> Preventiva</span>
-              <span className="ml-2 text-[11px]"><input type="checkbox" /> Melhoria</span>
-              <span className="ml-2 text-[11px]"><input type="checkbox" /> Predial</span>
-            </td>
-          </tr>
+        {/* Motivo */}
+        <div className={section}>
+          <span className={label}>Motivo:</span>
+          <div className={fieldLine} />
+        </div>
 
-          {/* Descrição do equipamento */}
-          <tr>
-            <td colSpan={7} className="border border-black p-1">
-              <span className={label}>Descrição do equipamento:</span>
-              <div className={`${line} min-h-[18px]`} />
-              <div className={`${line} min-h-[18px]`} />
-            </td>
-          </tr>
+        {/* Tipo de serviço */}
+        <div className={section}>
+          <span className={label}>Tipo de serviço:</span>
+          <div className="inline-flex gap-3 ml-2 text-[11px]">
+            <span><input type="checkbox" /> Corretiva</span>
+            <span><input type="checkbox" /> Preventiva</span>
+            <span><input type="checkbox" /> Melhoria</span>
+            <span><input type="checkbox" /> Predial</span>
+          </div>
+        </div>
 
-          {/* Descrição do serviço a ser realizado */}
-          <tr>
-            <td colSpan={7} className="border border-black p-1">
-              <span className={label}>Descrição do serviço a ser realizado:</span>
-              <div className={`${line} min-h-[18px]`} />
-              <div className={`${line} min-h-[18px]`} />
-            </td>
-          </tr>
+        {/* Descrição do equipamento */}
+        <div className={section}>
+          <span className={label}>Descrição do equipamento:</span>
+          <div className={fieldLine} />
+          <div className={fieldLine} />
+        </div>
 
-          {/* Descrição do serviço realizado */}
-          <tr>
-            <td colSpan={7} className="border border-black p-1">
-              <span className={label}>Descrição do serviço realizado:</span>
-              <div className={`${line} min-h-[18px]`} />
-              <div className={`${line} min-h-[18px]`} />
-              <div className={`${line} min-h-[18px]`} />
-              <div className={`${line} min-h-[18px]`} />
-            </td>
-          </tr>
+        {/* Descrição do serviço a ser realizado */}
+        <div className={section}>
+          <span className={label}>Descrição do serviço a ser realizado:</span>
+          <div className={fieldLine} />
+          <div className={fieldLine} />
+        </div>
 
-          {/* Solicitante / Turno */}
-          <tr>
-            <td colSpan={4} className="border border-black p-1">
-              <span className={label}>Solicitante:</span>
-              <div className={`${line} min-h-[18px]`} />
-            </td>
-            <td colSpan={3} className="border border-black p-1">
-              <span className={label}>Turno:</span>
-              <div className={`${line} min-h-[18px]`} />
-            </td>
-          </tr>
+        {/* Descrição do serviço realizado - usa espaço flexível */}
+        <div className={`${section} flex-1 print-grow flex flex-col`}>
+          <span className={label}>Descrição do serviço realizado:</span>
+          <div className={fieldLine} />
+          <div className={fieldLine} />
+          <div className={fieldLine} />
+          <div className={fieldLine} />
+          <div className={fieldLine} />
+          <div className="flex-1" />
+        </div>
 
-          {/* Datas */}
-          <tr>
-            <td colSpan={2} className={cellBold}>Início da ocorrência</td>
-            <td colSpan={2} className={cellBold}>Início do conserto</td>
-            <td colSpan={2} className={cellBold}>Fim do conserto</td>
-            <td colSpan={1} className={cellBold}>Fim da ocorrência</td>
-          </tr>
-          <tr>
-            <td colSpan={2} className="border border-black p-1 text-[10px]">
-              Data: <span className="inline-block border-b border-black w-14 ml-1" />&nbsp;
+        {/* Solicitante / Turno */}
+        <div className="flex border-b border-black border-l border-r">
+          <div className="flex-1 border-r border-black p-2">
+            <span className={label}>Solicitante:</span>
+            <div className={fieldLine} />
+          </div>
+          <div className="w-36 p-2">
+            <span className={label}>Turno:</span>
+            <div className={fieldLine} />
+          </div>
+        </div>
+
+        {/* Datas */}
+        <div className="grid grid-cols-4 border-b border-black border-l border-r">
+          <div className="border-r border-black p-1 text-[10px] font-bold bg-gray-100 text-center">Início da ocorrência</div>
+          <div className="border-r border-black p-1 text-[10px] font-bold bg-gray-100 text-center">Início do conserto</div>
+          <div className="border-r border-black p-1 text-[10px] font-bold bg-gray-100 text-center">Fim do conserto</div>
+          <div className="p-1 text-[10px] font-bold bg-gray-100 text-center">Fim da ocorrência</div>
+        </div>
+        <div className="grid grid-cols-4 border-b border-black border-l border-r">
+          {[0, 0, 0, 0].map((_, i) => (
+            <div key={i} className="border-r border-black p-1 text-[10px]">
+              Data: <span className="inline-block border-b border-black w-12 ml-1" />
               Hora: <span className="inline-block border-b border-black w-10 ml-1" />
-            </td>
-            <td colSpan={2} className="border border-black p-1 text-[10px]">
-              Data: <span className="inline-block border-b border-black w-14 ml-1" />&nbsp;
-              Hora: <span className="inline-block border-b border-black w-10 ml-1" />
-            </td>
-            <td colSpan={2} className="border border-black p-1 text-[10px]">
-              Data: <span className="inline-block border-b border-black w-14 ml-1" />&nbsp;
-              Hora: <span className="inline-block border-b border-black w-10 ml-1" />
-            </td>
-            <td colSpan={1} className="border border-black p-1 text-[10px]">
-              Data: <span className="inline-block border-b border-black w-8 ml-1" />&nbsp;
-              Hora: <span className="inline-block border-b border-black w-8 ml-1" />
-            </td>
-          </tr>
+            </div>
+          ))}
+        </div>
 
-          {/* Técnico / Líder */}
-          <tr>
-            <td colSpan={4} className="border border-black p-1">
-              <span className={label}>Técnico Responsável:</span>
-              <div className={`${line} min-h-[18px]`} />
-            </td>
-            <td colSpan={3} className="border border-black p-1">
-              <span className={label}>Líder Responsável:</span>
-              <div className={`${line} min-h-[18px]`} />
-            </td>
-          </tr>
+        {/* Técnico / Líder */}
+        <div className="flex border-b border-black border-l border-r">
+          <div className="flex-1 border-r border-black p-2">
+            <span className={label}>Técnico Responsável:</span>
+            <div className={fieldLine} />
+          </div>
+          <div className="flex-1 p-2">
+            <span className={label}>Líder Responsável:</span>
+            <div className={fieldLine} />
+          </div>
+        </div>
 
-          {/* Assinaturas */}
-          <tr>
-            <td colSpan={4} className="border border-black p-1">
-              <span className={label}>Ass:</span>
-              <div className={`${line} min-h-[24px]`} />
-            </td>
-            <td colSpan={3} className="border border-black p-1">
-              <span className={label}>Ass:</span>
-              <div className={`${line} min-h-[24px]`} />
-            </td>
-          </tr>
+        {/* Assinaturas */}
+        <div className="flex border-b border-black border-l border-r">
+          <div className="flex-1 border-r border-black p-2">
+            <span className={label}>Ass:</span>
+            <div className="border-b border-black w-full mt-1 min-h-[28px]" />
+          </div>
+          <div className="flex-1 p-2">
+            <span className={label}>Ass:</span>
+            <div className="border-b border-black w-full mt-1 min-h-[28px]" />
+          </div>
+        </div>
 
-          {/* Rodapé - cabeçalho da tabela */}
-          <tr>
-            <td className={cellBold}>Código</td>
-            <td className={cellBold}>Planta</td>
-            <td className={cellBold}>Revisão</td>
-            <td className={cellBold}>Data</td>
-            <td className={cellBold}>Criador</td>
-            <td className={cellBold}>Aprovador</td>
-            <td className={cellBold}>Setor</td>
-          </tr>
-
-          {/* Rodapé - valores */}
-          <tr>
-            <td className={cell}>&nbsp;</td>
-            <td className={cell}>&nbsp;</td>
-            <td className={cell}>&nbsp;</td>
-            <td className={cell}>&nbsp;</td>
-            <td className={cell}>&nbsp;</td>
-            <td className={cell}>&nbsp;</td>
-            <td className={cell}>&nbsp;</td>
-          </tr>
-        </table>
+        {/* Rodapé */}
+        <div className="grid grid-cols-7">
+          {["Código", "Planta", "Revisão", "Data", "Criador", "Aprovador", "Setor"].map((h) => (
+            <div key={h} className={cellBold}>{h}</div>
+          ))}
+        </div>
+        <div className="grid grid-cols-7">
+          {[1, 2, 3, 4, 5, 6, 7].map((i) => (
+            <div key={i} className="border border-black px-2 py-1 text-[10px] min-h-[18px]">&nbsp;</div>
+          ))}
+        </div>
       </div>
     </div>
   );
