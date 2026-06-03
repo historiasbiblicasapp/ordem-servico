@@ -85,7 +85,8 @@ export default function BlankOS() {
         @media print {
           body * { visibility: hidden; }
           #blank-os-print, #blank-os-print * { visibility: visible; }
-          #blank-os-print { position: absolute; left: 10mm; top: 8mm; width: 190mm; height: 279mm; margin: 0; padding: 0; border: none; box-shadow: none; }
+          #blank-os-print { position: absolute; left: 0; top: 0; width: 100%; height: auto; min-height: 279mm; margin: 0; padding: 0; border: none !important; box-shadow: none; box-sizing: border-box !important; }
+          #blank-os-print, #blank-os-print * { box-sizing: border-box !important; }
           .no-print { display: none !important; }
           .print-grow { flex: 1; }
         }
@@ -202,8 +203,8 @@ export default function BlankOS() {
           ))}
         </div>
         <div className="grid grid-cols-7">
-          {[1, 2, 3, 4, 5, 6, 7].map((i) => (
-            <div key={i} className="border border-black px-2 py-1 text-[10px] min-h-[18px]">&nbsp;</div>
+          {["TEM122", "Resende-RJ", "1", "11/03/2024", "Ayrton R.", "Leandro A.", "Manutenção"].map((val, i) => (
+            <div key={i} className="border border-black px-2 py-1 text-[10px] min-h-[18px]">{val}</div>
           ))}
         </div>
       </div>
