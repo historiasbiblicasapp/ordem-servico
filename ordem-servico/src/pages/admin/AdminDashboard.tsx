@@ -119,14 +119,25 @@ export default function AdminDashboard() {
           <h2 className="font-semibold text-slate-800">Numeração OS em Branco</h2>
         </div>
         <p className="text-sm text-slate-500 mb-4">
-          Define o número inicial da OS em Branco. A cada impressão o número é incrementado automaticamente.
+          Define o intervalo de numeração. A cada impressão o número é incrementado até atingir o final.
         </p>
-        <div className="flex items-center gap-3">
-          <input type="number" defaultValue={(() => { try { return parseInt(localStorage.getItem("os:blank_os_counter") || "1071", 10); } catch { return 1071; } })()}
-            onChange={(e) => localStorage.setItem("os:blank_os_counter", e.target.value)}
-            className="w-32 border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 min-h-[44px] text-center"
-          />
-          <span className="text-sm text-slate-500">Próximo número na impressão</span>
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-slate-600">Inicial:</span>
+            <input type="number" defaultValue={(() => { try { return parseInt(localStorage.getItem("os:blank_os_counter") || "1071", 10); } catch { return 1071; } })()}
+              onChange={(e) => localStorage.setItem("os:blank_os_counter", e.target.value)}
+              className="w-28 border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 min-h-[44px] text-center"
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-slate-600">Final:</span>
+            <input type="number" defaultValue={(() => { try { return parseInt(localStorage.getItem("os:blank_os_counter_end") || "", 10); } catch { return ""; } })()}
+              onChange={(e) => localStorage.setItem("os:blank_os_counter_end", e.target.value)}
+              className="w-28 border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 min-h-[44px] text-center"
+              placeholder="ilimitado"
+            />
+          </div>
+          <span className="text-sm text-slate-500">Se final vazio, não há limite</span>
         </div>
       </div>
 

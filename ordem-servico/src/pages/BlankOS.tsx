@@ -2,16 +2,30 @@ import { useState } from "react";
 import { Printer } from "lucide-react";
 
 const COUNTER_KEY = "os:blank_os_counter";
+const COUNTER_END_KEY = "os:blank_os_counter_end";
 const DEFAULT_START = 1071;
 
-function getNextNumber(): number {
+function getStartNumber(): number {
   const raw = localStorage.getItem(COUNTER_KEY);
   if (!raw) return DEFAULT_START;
   const num = parseInt(raw, 10);
   return isNaN(num) ? DEFAULT_START : num;
 }
 
+function getEndNumber(): number {
+  const raw = localStorage.getItem(COUNTER_END_KEY);
+  if (!raw) return 999999;
+  const num = parseInt(raw, 10);
+  return isNaN(num) ? 999999 : num;
+}
+
+function getNextNumber(): number {
+  return getStartNumber();
+}
+
 function incrementCounter(current: number) {
+  const end = getEndNumber();
+  if (current >= end) return;
   localStorage.setItem(COUNTER_KEY, String(current + 1));
 }
 
