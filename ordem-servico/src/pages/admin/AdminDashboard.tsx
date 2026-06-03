@@ -125,7 +125,7 @@ export default function AdminDashboard() {
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2">
             <span className="text-sm text-slate-600">Inicial:</span>
-            <input type="number" defaultValue={(() => { try { return parseInt(localStorage.getItem("os:blank_os_counter_start") || localStorage.getItem("os:blank_os_counter") || "1071", 10); } catch { return 1071; } })()}
+            <input type="number" defaultValue={(() => { try { return parseInt(localStorage.getItem("os:blank_os_counter_start") || localStorage.getItem("os:blank_os_counter") || "1100", 10); } catch { return 1100; } })()}
               onChange={(e) => {
                 const v = e.target.value;
                 localStorage.setItem("os:blank_os_counter_start", v);
@@ -144,7 +144,7 @@ export default function AdminDashboard() {
           </div>
           <span className="text-sm text-slate-500">Se final vazio, não há limite</span>
           <button onClick={() => {
-            const current = localStorage.getItem("os:blank_os_counter") || "1071";
+            const current = localStorage.getItem("os:blank_os_counter") || "1100";
             const resposta = prompt("Qual número deseja?", current);
             if (resposta === null) return;
             const n = parseInt(resposta, 10);

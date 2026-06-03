@@ -4,7 +4,7 @@ import { Printer } from "lucide-react";
 const COUNTER_KEY = "os:blank_os_counter";
 const COUNTER_START_KEY = "os:blank_os_counter_start";
 const COUNTER_END_KEY = "os:blank_os_counter_end";
-const DEFAULT_START = 1071;
+const DEFAULT_START = 1100;
 
 function ensureStart(): void {
   if (!localStorage.getItem(COUNTER_START_KEY)) {
