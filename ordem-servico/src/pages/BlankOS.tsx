@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Printer } from "lucide-react";
 
 const COUNTER_KEY = "os:blank_os_counter";
@@ -58,26 +58,149 @@ export function resetBlankCounter(): number {
 
 const cellBold = "border border-black px-2 py-1 text-[10px] font-bold bg-gray-100 text-center";
 
-export default function BlankOS() {
-  const [numero, setNumero] = useState(getNextNumber);
-
-  const handlePrint = () => {
-    incrementCounter(numero);
-    setNumero(numero + 1);
-    window.print();
-  };
-
+function OSForm({ numero }: { numero: number }) {
   const label = "font-bold text-[11px]";
   const fieldLine = "border-b border-black w-full mt-1 min-h-[22px]";
   const section = "border border-black p-2";
 
   return (
+    <>
+      <div className="flex items-center border-b border-black">
+        <div className="w-24 p-1"><img src="/logo.png" alt="Raitz" className="h-10 object-contain" /></div>
+        <div className="flex-1 text-center text-base font-bold">ORDEM DE SERVIÇO</div>
+        <div className="w-24 p-1 text-right text-base font-bold">Nº {numero}</div>
+      </div>
+      <div className={section}>
+        <span className={label}>Motivo:</span>
+        <div className={fieldLine} />
+      </div>
+      <div className={section}>
+        <span className={label}>Tipo de serviço:</span>
+        <div className="inline-flex gap-3 ml-2 text-[11px]">
+          <span><input type="checkbox" /> Corretiva</span>
+          <span><input type="checkbox" /> Preventiva</span>
+          <span><input type="checkbox" /> Melhoria</span>
+          <span><input type="checkbox" /> Predial</span>
+        </div>
+      </div>
+      <div className={section}>
+        <span className={label}>Descrição do equipamento:</span>
+        <div className={fieldLine} />
+        <div className={fieldLine} />
+      </div>
+      <div className={section}>
+        <span className={label}>Descrição do serviço a ser realizado:</span>
+        <div className={fieldLine} />
+        <div className={fieldLine} />
+      </div>
+      <div className={`${section} flex-1 print-grow flex flex-col`}>
+        <span className={label}>Descrição do serviço realizado:</span>
+        <div className={fieldLine} />
+        <div className={fieldLine} />
+        <div className={fieldLine} />
+        <div className={fieldLine} />
+        <div className={fieldLine} />
+        <div className="flex-1" />
+      </div>
+      <div className="flex border-b border-black border-l border-r">
+        <div className="flex-1 border-r border-black p-2">
+          <span className={label}>Solicitante:</span>
+          <div className={fieldLine} />
+        </div>
+        <div className="w-36 p-2">
+          <span className={label}>Turno:</span>
+          <div className={fieldLine} />
+        </div>
+      </div>
+      <div className="grid grid-cols-4 border-b border-black border-l border-r">
+        <div className="border-r border-black p-1 text-[10px] font-bold bg-gray-100 text-center">Início da ocorrência</div>
+        <div className="border-r border-black p-1 text-[10px] font-bold bg-gray-100 text-center">Início do conserto</div>
+        <div className="border-r border-black p-1 text-[10px] font-bold bg-gray-100 text-center">Fim do conserto</div>
+        <div className="p-1 text-[10px] font-bold bg-gray-100 text-center">Fim da ocorrência</div>
+      </div>
+      <div className="grid grid-cols-4 border-b border-black border-l border-r">
+        {[0, 0, 0, 0].map((_, i) => (
+          <div key={i} className="border-r border-black p-1 text-[10px]">
+            Data: <span className="inline-block border-b border-black w-12 ml-1" />
+            Hora: <span className="inline-block border-b border-black w-10 ml-1" />
+          </div>
+        ))}
+      </div>
+      <div className="flex border-b border-black border-l border-r">
+        <div className="flex-1 border-r border-black p-2">
+          <span className={label}>Técnico Responsável:</span>
+          <div className={fieldLine} />
+        </div>
+        <div className="flex-1 p-2">
+          <span className={label}>Líder Responsável:</span>
+          <div className={fieldLine} />
+        </div>
+      </div>
+      <div className="flex border-b border-black border-l border-r">
+        <div className="flex-1 border-r border-black p-2">
+          <span className={label}>Ass:</span>
+          <div className="border-b border-black w-full mt-1 min-h-[28px]" />
+        </div>
+        <div className="flex-1 p-2">
+          <span className={label}>Ass:</span>
+          <div className="border-b border-black w-full mt-1 min-h-[28px]" />
+        </div>
+      </div>
+      <div className="grid grid-cols-7">
+        {["Código", "Planta", "Revisão", "Data", "Criador", "Aprovador", "Setor"].map((h) => (
+          <div key={h} className={cellBold}>{h}</div>
+        ))}
+      </div>
+      <div className="grid grid-cols-7">
+        {["TEM122", "Resende-RJ", "1", "11/03/2024", "Ayrton R.", "Leandro A.", "Manutenção"].map((val, i) => (
+          <div key={i} className="border border-black px-2 py-1 text-[10px] min-h-[18px]">{val}</div>
+        ))}
+      </div>
+    </>
+  );
+}
+
+export default function BlankOS() {
+  const [numero, setNumero] = useState(getNextNumber);
+  const [qtd, setQtd] = useState(1);
+  const [printing, setPrinting] = useState<number[] | null>(null);
+
+  useEffect(() => {
+    if (!printing) return;
+    const onEnd = () => setPrinting(null);
+    window.addEventListener("afterprint", onEnd);
+    const id = setTimeout(() => window.print(), 50);
+    return () => {
+      clearTimeout(id);
+      window.removeEventListener("afterprint", onEnd);
+    };
+  }, [printing]);
+
+  const handlePrint = () => {
+    const c = numero;
+    const e = getEndNumber();
+    const n = Math.min(qtd, 50, Math.max(1, e - c + 1));
+    const nums = Array.from({ length: n }, (_, i) => c + i);
+    for (let i = 0; i < n; i++) incrementCounter(c + i);
+    setNumero(c + n);
+    setPrinting(nums);
+  };
+
+  const displayNums = printing ?? [numero];
+
+  return (
     <div>
-      <div className="no-print mb-4 flex gap-3 items-center">
+      <div className="no-print mb-4 flex flex-wrap gap-3 items-center">
         <button onClick={handlePrint} className="bg-blue-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center gap-2 min-h-[44px]">
-          <Printer className="h-4 w-4" /> Imprimir OS Nº {numero}
+          <Printer className="h-4 w-4" /> Imprimir
         </button>
-        <span className="text-sm text-slate-500">Após imprimir, o número avança automaticamente.</span>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-slate-600">Quantidade:</span>
+          <input type="number" min={1} max={50} value={qtd}
+            onChange={e => setQtd(Math.max(1, parseInt(e.target.value) || 1))}
+            className="w-20 border border-slate-300 rounded-lg px-3 py-2.5 text-sm text-center min-h-[44px]" />
+        </div>
+        <span className="text-sm text-slate-500">Imprimindo: Nº {numero} {qtd > 1 ? `até ${numero + qtd - 1}` : ""}</span>
       </div>
 
       <style>{`
@@ -89,124 +212,17 @@ export default function BlankOS() {
           #blank-os-print, #blank-os-print * { box-sizing: border-box !important; }
           .no-print { display: none !important; }
           .print-grow { flex: 1; }
+          .os-page { page-break-after: always; }
         }
         #blank-os-print { display: flex; flex-direction: column; }
       `}</style>
 
       <div id="blank-os-print" className="bg-white border border-black" style={{ width: "190mm" }}>
-
-        {/* Cabeçalho: Logo + Título + Nº */}
-        <div className="flex items-center border-b border-black">
-          <div className="w-24 p-1"><img src="/logo.png" alt="Raitz" className="h-10 object-contain" /></div>
-          <div className="flex-1 text-center text-base font-bold">ORDEM DE SERVIÇO</div>
-          <div className="w-24 p-1 text-right text-base font-bold">Nº {numero}</div>
-        </div>
-
-        {/* Motivo */}
-        <div className={section}>
-          <span className={label}>Motivo:</span>
-          <div className={fieldLine} />
-        </div>
-
-        {/* Tipo de serviço */}
-        <div className={section}>
-          <span className={label}>Tipo de serviço:</span>
-          <div className="inline-flex gap-3 ml-2 text-[11px]">
-            <span><input type="checkbox" /> Corretiva</span>
-            <span><input type="checkbox" /> Preventiva</span>
-            <span><input type="checkbox" /> Melhoria</span>
-            <span><input type="checkbox" /> Predial</span>
+        {displayNums.map((n, idx) => (
+          <div key={n} className={idx < displayNums.length - 1 ? "os-page" : ""}>
+            <OSForm numero={n} />
           </div>
-        </div>
-
-        {/* Descrição do equipamento */}
-        <div className={section}>
-          <span className={label}>Descrição do equipamento:</span>
-          <div className={fieldLine} />
-          <div className={fieldLine} />
-        </div>
-
-        {/* Descrição do serviço a ser realizado */}
-        <div className={section}>
-          <span className={label}>Descrição do serviço a ser realizado:</span>
-          <div className={fieldLine} />
-          <div className={fieldLine} />
-        </div>
-
-        {/* Descrição do serviço realizado - usa espaço flexível */}
-        <div className={`${section} flex-1 print-grow flex flex-col`}>
-          <span className={label}>Descrição do serviço realizado:</span>
-          <div className={fieldLine} />
-          <div className={fieldLine} />
-          <div className={fieldLine} />
-          <div className={fieldLine} />
-          <div className={fieldLine} />
-          <div className="flex-1" />
-        </div>
-
-        {/* Solicitante / Turno */}
-        <div className="flex border-b border-black border-l border-r">
-          <div className="flex-1 border-r border-black p-2">
-            <span className={label}>Solicitante:</span>
-            <div className={fieldLine} />
-          </div>
-          <div className="w-36 p-2">
-            <span className={label}>Turno:</span>
-            <div className={fieldLine} />
-          </div>
-        </div>
-
-        {/* Datas */}
-        <div className="grid grid-cols-4 border-b border-black border-l border-r">
-          <div className="border-r border-black p-1 text-[10px] font-bold bg-gray-100 text-center">Início da ocorrência</div>
-          <div className="border-r border-black p-1 text-[10px] font-bold bg-gray-100 text-center">Início do conserto</div>
-          <div className="border-r border-black p-1 text-[10px] font-bold bg-gray-100 text-center">Fim do conserto</div>
-          <div className="p-1 text-[10px] font-bold bg-gray-100 text-center">Fim da ocorrência</div>
-        </div>
-        <div className="grid grid-cols-4 border-b border-black border-l border-r">
-          {[0, 0, 0, 0].map((_, i) => (
-            <div key={i} className="border-r border-black p-1 text-[10px]">
-              Data: <span className="inline-block border-b border-black w-12 ml-1" />
-              Hora: <span className="inline-block border-b border-black w-10 ml-1" />
-            </div>
-          ))}
-        </div>
-
-        {/* Técnico / Líder */}
-        <div className="flex border-b border-black border-l border-r">
-          <div className="flex-1 border-r border-black p-2">
-            <span className={label}>Técnico Responsável:</span>
-            <div className={fieldLine} />
-          </div>
-          <div className="flex-1 p-2">
-            <span className={label}>Líder Responsável:</span>
-            <div className={fieldLine} />
-          </div>
-        </div>
-
-        {/* Assinaturas */}
-        <div className="flex border-b border-black border-l border-r">
-          <div className="flex-1 border-r border-black p-2">
-            <span className={label}>Ass:</span>
-            <div className="border-b border-black w-full mt-1 min-h-[28px]" />
-          </div>
-          <div className="flex-1 p-2">
-            <span className={label}>Ass:</span>
-            <div className="border-b border-black w-full mt-1 min-h-[28px]" />
-          </div>
-        </div>
-
-        {/* Rodapé */}
-        <div className="grid grid-cols-7">
-          {["Código", "Planta", "Revisão", "Data", "Criador", "Aprovador", "Setor"].map((h) => (
-            <div key={h} className={cellBold}>{h}</div>
-          ))}
-        </div>
-        <div className="grid grid-cols-7">
-          {["TEM122", "Resende-RJ", "1", "11/03/2024", "Ayrton R.", "Leandro A.", "Manutenção"].map((val, i) => (
-            <div key={i} className="border border-black px-2 py-1 text-[10px] min-h-[18px]">{val}</div>
-          ))}
-        </div>
+        ))}
       </div>
     </div>
   );
