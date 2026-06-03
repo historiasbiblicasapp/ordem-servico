@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
-import { ClipboardList, Plus, FileText, Settings, LogOut, Shield, BarChart3, Menu, X } from "lucide-react";
+import { ClipboardList, Plus, FileText, Settings, LogOut, Shield, BarChart3, Menu, X, Printer } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function Layout() {
@@ -82,6 +82,10 @@ export default function Layout() {
                 <BarChart3 className="h-4 w-4 inline mr-1" />
                 Relatórios
               </Link>
+              <Link to="/os-branco" className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${isActive("/os-branco") ? "bg-blue-50 text-blue-700" : "text-slate-600 hover:bg-slate-100"}`}>
+                <FileText className="h-4 w-4 inline mr-1" />
+                OS em Branco
+              </Link>
               {isAdmin && (
                 <Link to="/admin" className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${location.pathname.startsWith("/admin") ? "bg-amber-50 text-amber-700" : "text-slate-600 hover:bg-slate-100"}`}>
                   <Settings className="h-4 w-4 inline mr-1" />
@@ -114,6 +118,9 @@ export default function Layout() {
                 </Link>
                 <Link to="/relatorios" className={linkClass("/relatorios")}>
                   <BarChart3 className="h-4 w-4 inline mr-2" />Relatórios
+                </Link>
+                <Link to="/os-branco" className={linkClass("/os-branco")}>
+                  <FileText className="h-4 w-4 inline mr-2" />OS em Branco
                 </Link>
                 {isAdmin && (
                   <>

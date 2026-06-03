@@ -113,6 +113,23 @@ export default function AdminDashboard() {
         </div>
       </div>
 
+      <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-4 sm:p-5 mt-6">
+        <div className="flex items-center gap-2 mb-3">
+          <FileText className="h-5 w-5 text-purple-600" />
+          <h2 className="font-semibold text-slate-800">Numeração OS em Branco</h2>
+        </div>
+        <p className="text-sm text-slate-500 mb-4">
+          Define o número inicial da OS em Branco. A cada impressão o número é incrementado automaticamente.
+        </p>
+        <div className="flex items-center gap-3">
+          <input type="number" defaultValue={(() => { try { return parseInt(localStorage.getItem("os:blank_os_counter") || "1071", 10); } catch { return 1071; } })()}
+            onChange={(e) => localStorage.setItem("os:blank_os_counter", e.target.value)}
+            className="w-32 border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 min-h-[44px] text-center"
+          />
+          <span className="text-sm text-slate-500">Próximo número na impressão</span>
+        </div>
+      </div>
+
       {isSuperAdmin && (
       <>
       <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-4 sm:p-5 mt-6">

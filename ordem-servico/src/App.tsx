@@ -5,6 +5,7 @@ import Layout from "@/components/Layout";
 import Login from "@/pages/Login";
 import Dashboard from "@/pages/Dashboard";
 import OSForm from "@/pages/OSForm";
+import BlankOS from "@/pages/BlankOS";
 import Reports from "@/pages/Reports";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
 import AtividadesPage from "@/pages/admin/AtividadesPage";
@@ -30,6 +31,7 @@ export default function App() {
           >
           <Route path="/" element={<Dashboard />} />
           <Route path="/relatorios" element={<Reports />} />
+          <Route path="/os-branco" element={<BlankOS />} />
           <Route path="/nova" element={<OSForm />} />
           <Route path="/nova-corretiva" element={<OSForm />} />
             <Route path="/editar/:id" element={<OSForm />} />
