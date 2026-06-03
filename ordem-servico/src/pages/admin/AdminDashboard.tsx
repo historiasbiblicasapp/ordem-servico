@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ListTodo, Wrench, Building2, Hash, FileClock, Image as ImageIcon, Upload, Trash2, CalendarCheck, Users, CloudUpload, Loader2, CheckCircle2, AlertCircle, Database } from "lucide-react";
+import { ListTodo, Wrench, Building2, Hash, FileText, FileClock, Image as ImageIcon, Upload, Trash2, CalendarCheck, Users, CloudUpload, Loader2, CheckCircle2, AlertCircle, Database } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 const cards = [
