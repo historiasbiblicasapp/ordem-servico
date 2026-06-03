@@ -2,13 +2,23 @@ import { useState } from "react";
 import { Printer } from "lucide-react";
 
 const COUNTER_KEY = "os:blank_os_counter";
+const COUNTER_START_KEY = "os:blank_os_counter_start";
 const COUNTER_END_KEY = "os:blank_os_counter_end";
 const DEFAULT_START = 1071;
 
+function ensureStart(): void {
+  if (!localStorage.getItem(COUNTER_START_KEY)) {
+    localStorage.setItem(COUNTER_START_KEY, String(DEFAULT_START));
+  }
+  if (!localStorage.getItem(COUNTER_KEY)) {
+    localStorage.setItem(COUNTER_KEY, localStorage.getItem(COUNTER_START_KEY)!);
+  }
+}
+
 function getStartNumber(): number {
-  const raw = localStorage.getItem(COUNTER_KEY);
-  if (!raw) return DEFAULT_START;
-  const num = parseInt(raw, 10);
+  ensureStart();
+  const raw = localStorage.getItem(COUNTER_START_KEY);
+  const num = parseInt(raw || String(DEFAULT_START), 10);
   return isNaN(num) ? DEFAULT_START : num;
 }
 
@@ -20,7 +30,10 @@ function getEndNumber(): number {
 }
 
 function getNextNumber(): number {
-  return getStartNumber();
+  ensureStart();
+  const raw = localStorage.getItem(COUNTER_KEY);
+  const num = parseInt(raw || localStorage.getItem(COUNTER_START_KEY)!, 10);
+  return isNaN(num) ? getStartNumber() : num;
 }
 
 function incrementCounter(current: number) {
@@ -35,6 +48,12 @@ export function getBlankCounter(): number {
 
 export function setBlankCounter(val: number) {
   localStorage.setItem(COUNTER_KEY, String(val));
+}
+
+export function resetBlankCounter(): number {
+  const start = getStartNumber();
+  localStorage.setItem(COUNTER_KEY, String(start));
+  return start;
 }
 
 const cellBold = "border border-black px-2 py-1 text-[10px] font-bold bg-gray-100 text-center";

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ListTodo, Wrench, Building2, Hash, FileText, FileClock, Image as ImageIcon, Upload, Trash2, CalendarCheck, Users, CloudUpload, Loader2, CheckCircle2, AlertCircle, Database } from "lucide-react";
+import { ListTodo, Wrench, Building2, Hash, FileText, FileClock, Image as ImageIcon, Upload, Trash2, CalendarCheck, Users, CloudUpload, Loader2, CheckCircle2, AlertCircle, Database, RotateCcw } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 const cards = [
@@ -19,6 +19,7 @@ export default function AdminDashboard() {
   const [syncing, setSyncing] = useState(false);
   const [syncOk, setSyncOk] = useState(false);
   const [syncErrors, setSyncErrors] = useState<string[]>([]);
+  const [resetMsg, setResetMsg] = useState<string | null>(null);
 
   useEffect(() => {
     setWallpaperUrl(localStorage.getItem("wallpaper"));
@@ -124,8 +125,12 @@ export default function AdminDashboard() {
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2">
             <span className="text-sm text-slate-600">Inicial:</span>
-            <input type="number" defaultValue={(() => { try { return parseInt(localStorage.getItem("os:blank_os_counter") || "1071", 10); } catch { return 1071; } })()}
-              onChange={(e) => localStorage.setItem("os:blank_os_counter", e.target.value)}
+            <input type="number" defaultValue={(() => { try { return parseInt(localStorage.getItem("os:blank_os_counter_start") || localStorage.getItem("os:blank_os_counter") || "1071", 10); } catch { return 1071; } })()}
+              onChange={(e) => {
+                const v = e.target.value;
+                localStorage.setItem("os:blank_os_counter_start", v);
+                localStorage.setItem("os:blank_os_counter", v);
+              }}
               className="w-28 border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 min-h-[44px] text-center"
             />
           </div>
@@ -138,6 +143,17 @@ export default function AdminDashboard() {
             />
           </div>
           <span className="text-sm text-slate-500">Se final vazio, não há limite</span>
+          <button onClick={() => {
+            const start = localStorage.getItem("os:blank_os_counter_start") || "1071";
+            localStorage.setItem("os:blank_os_counter", start);
+            setResetMsg("Contador resetado para " + start);
+            setTimeout(() => setResetMsg(null), 2500);
+          }}
+            className="bg-amber-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-amber-700 transition-colors min-h-[44px] flex items-center gap-2">
+            <RotateCcw className="h-4 w-4" />
+            Reset
+          </button>
+          {resetMsg && <span className="text-sm text-green-600 font-medium">{resetMsg}</span>}
         </div>
       </div>
 
