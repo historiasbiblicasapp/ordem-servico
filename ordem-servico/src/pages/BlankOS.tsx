@@ -208,11 +208,11 @@ export default function BlankOS() {
         @media print {
           body * { visibility: hidden; }
           #blank-os-print, #blank-os-print * { visibility: visible; }
-          #blank-os-print { position: absolute; left: 0; top: 0; width: 100%; height: auto; min-height: 279mm; margin: 0; padding: 0; border: none !important; box-shadow: none; box-sizing: border-box !important; }
+          #blank-os-print { position: absolute; left: 0; top: 0; width: 100%; height: auto; margin: 0; padding: 0; border: none !important; box-shadow: none; box-sizing: border-box !important; }
           #blank-os-print, #blank-os-print * { box-sizing: border-box !important; }
           .no-print { display: none !important; }
           .print-grow { flex: 1; }
-          .os-page { page-break-after: always; }
+          .os-page { page-break-after: always; display: flex; flex-direction: column; height: 281mm; }
         }
         #blank-os-print { display: flex; flex-direction: column; }
       `}</style>
