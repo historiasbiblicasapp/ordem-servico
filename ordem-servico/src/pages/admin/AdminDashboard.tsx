@@ -144,9 +144,13 @@ export default function AdminDashboard() {
           </div>
           <span className="text-sm text-slate-500">Se final vazio, não há limite</span>
           <button onClick={() => {
-            const start = localStorage.getItem("os:blank_os_counter_start") || "1071";
-            localStorage.setItem("os:blank_os_counter", start);
-            setResetMsg("Contador resetado para " + start);
+            const current = localStorage.getItem("os:blank_os_counter") || "1071";
+            const resposta = prompt("Qual número deseja?", current);
+            if (resposta === null) return;
+            const n = parseInt(resposta, 10);
+            if (isNaN(n)) { alert("Número inválido."); return; }
+            localStorage.setItem("os:blank_os_counter", String(n));
+            setResetMsg("Contador alterado para " + n);
             setTimeout(() => setResetMsg(null), 2500);
           }}
             className="bg-amber-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-amber-700 transition-colors min-h-[44px] flex items-center gap-2">
