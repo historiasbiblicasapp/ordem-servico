@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ListTodo, Wrench, Building2, Hash, FileText, FileClock, Image as ImageIcon, Upload, Trash2, CalendarCheck, Users, CloudUpload, Loader2, CheckCircle2, AlertCircle, Database, RotateCcw } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { refreshConfigStore } from "@/lib/db";
 
 const cards = [
   { to: "/admin/atividades", icon: ListTodo, title: "Atividades", desc: "Gerenciar modelos de atividade com itens" },
@@ -130,6 +131,7 @@ export default function AdminDashboard() {
                 const v = e.target.value;
                 localStorage.setItem("os:blank_os_counter_start", v);
                 localStorage.setItem("os:blank_os_counter", v);
+                refreshConfigStore();
               }}
               className="w-28 border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 min-h-[44px] text-center"
             />
@@ -137,7 +139,7 @@ export default function AdminDashboard() {
           <div className="flex items-center gap-2">
             <span className="text-sm text-slate-600">Final:</span>
             <input type="number" defaultValue={(() => { try { return parseInt(localStorage.getItem("os:blank_os_counter_end") || "", 10); } catch { return ""; } })()}
-              onChange={(e) => localStorage.setItem("os:blank_os_counter_end", e.target.value)}
+              onChange={(e) => { localStorage.setItem("os:blank_os_counter_end", e.target.value); refreshConfigStore(); }}
               className="w-28 border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 min-h-[44px] text-center"
               placeholder="ilimitado"
             />
@@ -150,6 +152,7 @@ export default function AdminDashboard() {
             const n = parseInt(resposta, 10);
             if (isNaN(n)) { alert("Número inválido."); return; }
             localStorage.setItem("os:blank_os_counter", String(n));
+            refreshConfigStore();
             setResetMsg("Contador alterado para " + n);
             setTimeout(() => setResetMsg(null), 2500);
           }}

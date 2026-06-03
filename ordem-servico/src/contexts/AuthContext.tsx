@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { User } from "@/types";
 import { getCurrentUser, login as authLogin, logout as authLogout } from "@/lib/auth";
-import { seedInitialData, migrateNumeros, syncAllFromSupabase } from "@/lib/db";
+import { seedInitialData, migrateNumeros, syncAllFromSupabase, applyConfigFromStore } from "@/lib/db";
 
 interface AuthContextType {
   user: User | null;
@@ -19,6 +19,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     (async () => {
       await syncAllFromSupabase();
+      applyConfigFromStore();
       seedInitialData();
       migrateNumeros();
       setUser(getCurrentUser());

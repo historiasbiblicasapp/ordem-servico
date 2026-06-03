@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Printer } from "lucide-react";
+import { refreshConfigStore } from "@/lib/db";
 
 const COUNTER_KEY = "os:blank_os_counter";
 const COUNTER_START_KEY = "os:blank_os_counter_start";
@@ -40,6 +41,7 @@ function incrementCounter(current: number) {
   const end = getEndNumber();
   if (current >= end) return;
   localStorage.setItem(COUNTER_KEY, String(current + 1));
+  refreshConfigStore();
 }
 
 export function getBlankCounter(): number {

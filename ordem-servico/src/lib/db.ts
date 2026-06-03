@@ -95,7 +95,7 @@ function normalizeForSupabase(data: any): any {
 export async function syncAllFromSupabase() {
   try {
     const { supabase } = await import("./supabase");
-    const tables = ["users", "equipamentos", "setores", "tems", "revisoes", "atividades", "ordens"];
+    const tables = ["users", "equipamentos", "setores", "tems", "revisoes", "atividades", "ordens", "config"];
     for (const table of tables) {
       const { data, error } = await supabase.from(table).select("*");
       if (error) continue;
@@ -200,4 +200,24 @@ export function migrateNumeros() {
     }
   }
   if (changed) localStorage.setItem("os:ordens", JSON.stringify(ordens));
+}
+
+export function refreshConfigStore() {
+  const config = [
+    { id: "blank_os_counter", value: localStorage.getItem("os:blank_os_counter") || "" },
+    { id: "blank_os_counter_start", value: localStorage.getItem("os:blank_os_counter_start") || "" },
+    { id: "blank_os_counter_end", value: localStorage.getItem("os:blank_os_counter_end") || "" },
+  ];
+  localStorage.setItem("os:config", JSON.stringify(config));
+}
+
+export function applyConfigFromStore() {
+  const raw = localStorage.getItem("os:config");
+  if (!raw) return;
+  try {
+    const config = JSON.parse(raw);
+    for (const item of config) {
+      if (item.value) localStorage.setItem(item.id, item.value);
+    }
+  } catch { /* ignore */ }
 }
